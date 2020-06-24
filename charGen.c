@@ -1,52 +1,7 @@
-#include <stdint.h>
-#include <stdlib.h>
-#include <time.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <ctype.h> 
+#include "common.h"
 
-#define BASE_START_AGE 15
-#define REPEAT_EVENTS false
 
 bool debug = false;
-
-struct Character {
-    char name[10];
-    char lastName[10];
-    char title[20];
-    u_int8_t age;
-    bool gender;
-
-    u_int8_t str;
-    u_int8_t dex;
-    u_int8_t con;
-    u_int8_t inl;
-    u_int8_t wis;
-    u_int8_t cha;
-
-    char appearance[500];
-    char background[2000];
-};
-
-struct Event {
-    char sentence[100];
-    int8_t tolerance;
-    int8_t str;
-    int8_t dex;
-    int8_t con;
-    int8_t inl;
-    int8_t wis;
-    int8_t cha;
-    char title[50];
-};
-
-struct TokenList {
-    char replacment[30];
-    int numberOfTokens;
-    char tokens[20][30];
-};
-
 /* tokens
 #they# : he or she
 #their# : his or her
@@ -66,32 +21,39 @@ struct TokenList {
 #enemy# : orc to ogre
 #competitionActivity# : marathon to chess comp
 #shapes# : round to square
-#hairshape# : int to curly
+#hairshape# : short to curly
 #color# : red to blue
-#hight# : int to tall
+#hight# : short to tall
+#emotion# : calm to crazy
 */
 
-#define NUMBER_OF_DESCRIPTIONS 11
+#define NUMBER_OF_DESCRIPTIONS 13
 char descriptions[NUMBER_OF_DESCRIPTIONS][100] = {
     "#they# has #hairshape# #color# hair.",
     "#they# has #size# #color# eyes.",
     "#they# has many #size# scars.",
-    "#they# is missing #rand10# toes.",
-    "#they# is missing #rand10# fingers.",
+    //"#they# is missing #rand10# toes.",
+    //"#they# is missing #rand10# fingers.",
     "#they# is very #hight#.",
     "#they# has #length# legs.",
     "#they# has #length# arms.",
     "#they# has #size# ears.",
     "#they# has a #shapes# sized head.",
-    "#they# has #size# eyebrows."
+    "#they# has #size# eyebrows.",
+    "#they# has #color#ish skin.",
+    "#they# has #shapes# finger and toe nails.",
+    "#they# has #size# mouth.",
+    "#they# has a #emotion# look in #their# eyes."
 };
 
-#define NUMBER_OF_EVENTS 35
-#define NUMBER_OF_BIRTH_EVENTS 3
+#define NUMBER_OF_EVENTS 40
+#define NUMBER_OF_BIRTH_EVENTS 5
 struct Event events[NUMBER_OF_EVENTS] = {
     {"#they# grew up an orphan.", 2, 10, 0, 5, -10, 0, -5, "None"},
     {"#they# was born to a wealthy family.", 1, -10, 5, -10, 5, 0, 10, "None"},
     {"#their# father was #aan# #profession#.", 2, 5, 5, -5, 5, -5, -5, "None"},
+    {"#their# were born to #emotion# parents.", 3, -1, 1, -1, 1, -1, 1, "None"},
+    {"#their# grew up the youngest of #rand10# siblings.", 3, 1, -1, 1, -1, 1, -1, "None"},
     {"At the age of #age#, #they# won #their# #region#'s arm wrestling competition.", 3, 15, 0, 5, 0, 0, 0, " the Arm Wrestler"},
     {"#they# was banished from #their# #region# after killing a sacride #animal#.", 2, 0, 0, -10, 0, 0, 0, "None"},
     {"#they# has #aan# #size# scar on #their# face from being attacked by #aan# #enemy#.", 1, 5, 0, -5, 0, 0, 0, "None"},
@@ -123,10 +85,13 @@ struct Event events[NUMBER_OF_EVENTS] = {
     {"#their# #region#'s #profession# took pity on #them# when #they# was #age#.", 2, -5, -3, 0, -5, 0, -4, "None"},
     {"#they# does more sit-downs then sit-ups.", 4, -10, 0, 0, 0, 0, 0, "None"},
     {"#they# goes on a jog every #time#.", 1, 1, 0, 5, 0, 0, 0, "None"},
-    {"#they# finally understood gravity at the age of #age#.", 3, 0, 0, 0, 0, 1, 0, "None"}
+    {"#they# finally understood gravity at the age of #age#.", 3, 0, 0, 0, -5, 1, 0, "None"},
+    {"#they# fought in a #length# war for the #size# #region# of #city#.", 2, 0, 0, 10, 0, 0, 0, " the War Torn"},
+    {"#they# discovered an ancient #enemy#'s lair full of scrolls.", 1, 0, 0, 0, 0, 5, 0, "None"},
+    {"#they# created a well known #color# beverage in #their# #region#", 3, 0, 0, 0, 0, -5, 0, "None"}
 };
 
-#define ALL_TOKEN_LISTS_SIZE 14
+#define ALL_TOKEN_LISTS_SIZE 15
 struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     {"#object#", 10, {
         "key",
@@ -159,7 +124,7 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     },
     {"#length#", 4, {
         "tiny",
-        "int",
+        "short",
         "long",
         "very drawn-out"
         }
@@ -228,7 +193,7 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     },
     {"#hairshape#", 7, {
         "very little",
-        "int",
+        "short",
         "medium length",
         "long",
         "waist length",
@@ -250,7 +215,7 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     },
     {"#hight#", 4, {
         "small",
-        "int",
+        "short",
         "tall",
         "big"
         }
@@ -260,6 +225,17 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
         "oval",
         "square",
         "triangle"
+        }
+    },
+    {"#emotion#", 8, {
+        "calm",
+        "tired",
+        "hopefull",
+        "sad",
+        "curious",
+        "happy",
+        "vengefull",
+        "crazy"
         }
     }
 };
