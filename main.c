@@ -29,5 +29,5 @@ void main(int argc, char *argv[]){
     srand(seed);
     printf("Seed:%i\n\n", seed);
 
-    genCharacter();
+    //genCharacter();
 }
