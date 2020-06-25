@@ -1,7 +1,9 @@
 #include "common.h"
 
+#define BASE_START_AGE 15
+#define REPEAT_EVENTS false
 
-bool debug = false;
+
 /* tokens
 #they# : he or she
 #their# : his or her
@@ -48,7 +50,7 @@ char descriptions[NUMBER_OF_DESCRIPTIONS][100] = {
 
 #define NUMBER_OF_EVENTS 40
 #define NUMBER_OF_BIRTH_EVENTS 5
-struct Event events[NUMBER_OF_EVENTS] = {
+struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# grew up an orphan.", 2, 10, 0, 5, -10, 0, -5, "None"},
     {"#they# was born to a wealthy family.", 1, -10, 5, -10, 5, 0, 10, "None"},
     {"#their# father was #aan# #profession#.", 2, 5, 5, -5, 5, -5, -5, "None"},
@@ -88,7 +90,7 @@ struct Event events[NUMBER_OF_EVENTS] = {
     {"#they# finally understood gravity at the age of #age#.", 3, 0, 0, 0, -5, 1, 0, "None"},
     {"#they# fought in a #length# war for the #size# #region# of #city#.", 2, 0, 0, 10, 0, 0, 0, " the War Torn"},
     {"#they# discovered an ancient #enemy#'s lair full of scrolls.", 1, 0, 0, 0, 0, 5, 0, "None"},
-    {"#they# created a well known #color# beverage in #their# #region#", 3, 0, 0, 0, 0, -5, 0, "None"}
+    {"#they# created a well known #color# beverage in #their# #region#.", 3, 0, 0, 0, 0, -5, 0, "None"}
 };
 
 #define ALL_TOKEN_LISTS_SIZE 15
@@ -240,11 +242,6 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     }
 };
 
-int myRand(int i){
-    if (i == 0) return 0;
-    return rand() % i;
-}
-
 struct Character genEmptyCharacter(){
     return (struct Character) {"Nameless", "Smith", " the Untitled", 0, 0, 50, 50, 50, 50, 50, 50, "They are bland.", "They have done nothing."};
 }
@@ -295,33 +292,6 @@ void genRandomName(char name[10], bool isSurname, bool gender){
     }
 
     name[0] = toupper(name[0]);
-}
-
-int getStringLength(char string[]){
-    int len = 0;
-    while (string[len] != '\0') len++;
-    return len;
-}
-
-int isInString(char string[], char check[]){
-    int stringLength = getStringLength(string);
-    int checkLength = getStringLength(check);
-
-    for (int i = 0; i < (stringLength - checkLength); i++){
-        if (strncmp(&string[i], check, checkLength) == 0){
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-void sliceIncertString(char expression[100], char incert[], int location, int replacmentLen){
-    char oldExpression[100];
-    strcpy(oldExpression, expression);
-    expression[location] = '\0';
-    strcat(expression, incert);
-    strcat(expression, &oldExpression[location + replacmentLen]);
 }
 
 void evalExpression(char expression[], char destination[], struct Character *curChar){
@@ -439,18 +409,6 @@ void evalExpression(char expression[], char destination[], struct Character *cur
     destination[0] = toupper(destination[0]);
 }
 
-
-void shuffleArray(int array[], int size){
-    int temp;
-    int randLocation;
-    for (int i = 0; i < size; i++){
-        randLocation = myRand(size);
-        temp = array[i];
-        array[i] = array[randLocation];
-        array[randLocation] = temp;
-    }
-}
-
 void genApperance(struct Character *curChar){      
     char temp[100];
     char expression[100];
@@ -549,7 +507,7 @@ void genHistory(struct Character *curChar){
     }
 }
 
-void statsCheck(){
+void charStatsCheck(){
     int8_t str = 0;
     int8_t dex = 0;
     int8_t con = 0;
@@ -565,30 +523,4 @@ void statsCheck(){
         cha += events[i].cha;
     }
     printf("str:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", str, dex, con, inl, wis, cha);
-}
-
-void main(int argc, char *argv[]){
-    long seed = time(NULL);
-    for (int i = 0; i < argc; i++){
-        if (strcmp(argv[i], "-s") == 0){
-            seed = atol(argv[i + 1]);
-        } else if (strcmp(argv[i], "-d") == 0){
-            debug = true;
-        } else if (strcmp(argv[i], "-c") == 0){
-            statsCheck();
-            exit(0);
-        }
-    }
-
-    srand(seed);
-    printf("Seed:%i\n\n", seed);
-
-    struct Character test = genEmptyCharacter();
-
-    test.gender = rand() % 2;
-    genRandomName(test.name, false, test.gender);
-    genRandomName(test.lastName, true, test.gender);
-    genApperance(&test);
-    genHistory(&test);
-    outPutCharacter(&test);
 }
