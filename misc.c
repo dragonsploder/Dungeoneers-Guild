@@ -1,9 +1,30 @@
 #include "common.h"
 
+void copyArray(int source[], int destination[], int size, bool skipNegativeOne){
+    int destinationI=0;
+    for (int i = 0; i < size; i++){
+        if (skipNegativeOne && source[i] == -1){
+            size++;
+        } else {
+            destination[destinationI] = source[i];
+            destinationI++;
+        }
+    }
+}
+
 int getStringLength(char string[]){
     int len = 0;
     while (string[len] != '\0') len++;
     return len;
+}
+
+int isInIntArray(int array[], int size, int check){
+    for(int i = 0; i < size; i++){
+        if (check == array[i]){
+            return i;
+        }
+    }
+    return -1;
 }
 
 int isInString(char string[], char check[]){

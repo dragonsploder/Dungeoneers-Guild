@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h> 
+#include <math.h>
 
 extern bool debug;
 
@@ -66,9 +67,7 @@ struct Check {
     u_int8_t inl;
     u_int8_t wis;
     u_int8_t cha;
-
-    int difficulty;
-}
+};
 
 
 
@@ -80,9 +79,15 @@ void genRandomName(char name[10], bool isSurname, bool gender);
 void outPutCharacter(struct Character *curChar);
 void charStatsCheck();
 
+// taskGen.c
+struct Task genTask(int type, int difficulty);
+void outPutTask(struct Task *curTask);
+
 
 // misc.c
+void copyArray(int source[], int destination[], int size, bool skipNegativeOne);
 int getStringLength(char string[]);
+int isInIntArray(int array[], int size, int check);
 int isInString(char string[], char check[]);
 int myRand(int i);
 void shuffleArray(int array[], int size);

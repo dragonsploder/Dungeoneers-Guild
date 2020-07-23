@@ -13,6 +13,11 @@ void genCharacter(){
     outPutCharacter(&test);
 }
 
+void genNewTask(){
+    struct Task task = genTask(0, 6);
+    outPutTask(&task);
+}
+
 void main(int argc, char *argv[]){
     long seed = time(NULL);
     for (int i = 0; i < argc; i++){
@@ -30,4 +35,5 @@ void main(int argc, char *argv[]){
     printf("Seed:%i\n\n", seed);
 
     //genCharacter();
+    genNewTask();
 }
