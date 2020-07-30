@@ -39,23 +39,34 @@ struct Check {
 
 
 
-#define NUMBER_OF_CHECKS 12
+#define NUMBER_OF_CHECKS 22
 struct Check checks[NUMBER_OF_CHECKS] = {
+    {CHECK_TRAP, "Trip Wire", 0, 45, 0, 0, 0, 0},
     {CHECK_TRAP, "Spike Pit", 0, 50, 0, 0, 0, 0},
+    {CHECK_TRAP, "Falling Cage", 0, 55, 0, 0, 0, 0},
     {CHECK_TRAP, "Dart Launcher", 0, 60, 0, 0, 0, 0},
     {CHECK_TRAP, "Trapdoor", 0, 70, 0, 0, 0, 0},
+    {CHECK_TRAP, "Rolling Bolder", 0, 75, 0, 0, 0, 0},
+    {CHECK_TRAP, "Swinging Blade", 0, 80, 0, 0, 0, 0},
 
     {CHECK_MONS, "Rat", 50, 0, 0, 0, 0, 0},
-    {CHECK_MONS, "Goblin", 60, 0, 0, 0, 0, 0},
-    {CHECK_MONS, "Necromancer", 70, 0, 0, 0, 0, 0},
+    {CHECK_MONS, "Goblin", 55, 0, 0, 0, 0, 0},
+    {CHECK_MONS, "Bandit", 55, 0, 0, 0, 0, 0},
+    {CHECK_MONS, "Troll", 60, 0, 0, 0, 0, 0},
+    {CHECK_MONS, "Witch", 70, 0, 0, 0, 0, 0},
+    {CHECK_MONS, "Necromancer", 75, 0, 0, 0, 0, 0},
+    {CHECK_MONS, "Dragon", 80, 0, 0, 0, 0, 0},
+
 
     {CHECK_PUZZLE, "Combination Lock", 0, 0, 0, 50, 0, 0},
     {CHECK_PUZZLE, "Sokoban Room", 0, 0, 0, 60, 0, 0},
     {CHECK_PUZZLE, "Riddle Sphinx", 0, 0, 0, 70, 0, 0},
+    {CHECK_PUZZLE, "Sundial Shadow", 0, 0, 0, 75, 0, 0},
 
     {CHECK_SECRET, "Hidden Door", 0, 0, 0, 0, 50, 0},
     {CHECK_SECRET, "Cryptic Key", 0, 0, 0, 0, 60, 0},
     {CHECK_SECRET, "Secret Passage", 0, 0, 0, 0, 70, 0},
+    {CHECK_SECRET, "Invisable Button", 0, 0, 0, 0, 75, 0}
 };
 
 int getDifficulty(int array[], int size){
