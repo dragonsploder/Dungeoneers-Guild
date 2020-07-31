@@ -114,3 +114,22 @@ void outPutTask(struct Task *curTask){
         printf("Task:%s:%i\n", checks[curTask->checks[i]].name, checks[curTask->checks[i]].type);
     }
 }
+
+bool passCheck(struct Character* character, int checkId){
+   checks[checkId]
+}
+
+int runTask(struct Character characters[], int numberOfCharacters, struct Task* task){
+    int failedChecks = 0;
+    int passedCheck = false;
+    for(int i = 0; i < task->numberOfChecks; i++){
+        passedCheck = false;
+        for(int j = 0; j < numberOfCharacters; j++){
+            passedCheck = passCheck(&characters[j], task->checks[i]);
+            if (passedCheck) break;
+        }
+        if (!passedCheck) failedChecks++;
+    }
+
+    return failedChecks;
+}
