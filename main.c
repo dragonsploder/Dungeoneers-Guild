@@ -14,8 +14,18 @@ void genCharacter(){
 }
 
 void genNewTask(){
-    struct Task task = genTask(0, 6);
+    struct Character test = genEmptyCharacter();
+
+    test.gender = rand() % 2;
+    genRandomName(test.name, false, test.gender);
+    genRandomName(test.lastName, true, test.gender);
+    genApperance(&test);
+    genHistory(&test);
+
+    struct Task task = genTask(0, 5);
     outPutTask(&task);
+    printf("\n\n");
+    printf("Task count: %i\n", runTask(&test, 1, &task));
 }
 
 void main(int argc, char *argv[]){

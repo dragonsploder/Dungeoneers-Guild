@@ -115,8 +115,27 @@ void outPutTask(struct Task *curTask){
     }
 }
 
+//https://www.desmos.com/calculator/vsatioqttz
+bool individualCheck(int check, int character){
+    if (check != 0){
+        if(character - check > 0){
+            printf("Chance:%f\n", ((4.7931*pow(character - check, 3.0/5.0)) + 50));
+            return ((float)myRand(100) < ((4.7931*pow(character - check, 3.0/5.0)) + 50));
+        } else {
+            printf("Chance:%f\n", ((-4.7931*pow(check - character, 3.0/5.0)) + 50));
+            return ((float)myRand(100) < ((-4.7931*pow(check - character, 3.0/5.0)) + 50));
+        }
+    }
+    return true;
+}
+
 bool passCheck(struct Character* character, int checkId){
-   checks[checkId]
+    return (individualCheck(checks[checkId].str, character->str) &&
+            individualCheck(checks[checkId].dex, character->dex) &&
+            individualCheck(checks[checkId].con, character->con) &&
+            individualCheck(checks[checkId].inl, character->inl) &&
+            individualCheck(checks[checkId].wis, character->wis) &&
+            individualCheck(checks[checkId].cha, character->cha));
 }
 
 int runTask(struct Character characters[], int numberOfCharacters, struct Task* task){
@@ -125,7 +144,10 @@ int runTask(struct Character characters[], int numberOfCharacters, struct Task* 
     for(int i = 0; i < task->numberOfChecks; i++){
         passedCheck = false;
         for(int j = 0; j < numberOfCharacters; j++){
+            printf("Char Stats:\nstr:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", characters[j].str, characters[j].dex, characters[j].con, characters[j].inl, characters[j].wis, characters[j].cha);
+            printf("Check Stats:\nstr:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", checks[task->checks[i]].str, checks[task->checks[i]].dex, checks[task->checks[i]].con, checks[task->checks[i]].inl, checks[task->checks[i]].wis, checks[task->checks[i]].cha);
             passedCheck = passCheck(&characters[j], task->checks[i]);
+            printf(passedCheck?"pass\n\n":"fail\n\n");
             if (passedCheck) break;
         }
         if (!passedCheck) failedChecks++;

@@ -82,6 +82,7 @@ void charStatsCheck();
 // taskGen.c
 struct Task genTask(int type, int difficulty);
 void outPutTask(struct Task *curTask);
+int runTask(struct Character characters[], int numberOfCharacters, struct Task* task);
 
 
 // misc.c
