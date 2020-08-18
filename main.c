@@ -13,19 +13,34 @@ void genCharacter(){
     outPutCharacter(&test);
 }
 
+void genFullChar(struct Character* test){
+    test->gender = rand() % 2;
+    genRandomName(test->name, false, test->gender);
+    genRandomName(test->lastName, true, test->gender);
+    genApperance(test);
+    genHistory(test);
+}
+
 void genNewTask(){
     struct Character test = genEmptyCharacter();
+    genFullChar(&test);
+    outPutCharacter(&test);
 
-    test.gender = rand() % 2;
-    genRandomName(test.name, false, test.gender);
-    genRandomName(test.lastName, true, test.gender);
-    genApperance(&test);
-    genHistory(&test);
+    struct Character test2 = genEmptyCharacter();
+    genFullChar(&test2);
+    outPutCharacter(&test2);
 
-    struct Task task = genTask(0, 5);
-    outPutTask(&task);
+    struct Character test3 = genEmptyCharacter();
+    genFullChar(&test3);
+    outPutCharacter(&test3);
+
+    struct Character characters[3] = {test, test2, test3};
+    
+
+    struct Task task = genTask(0, 6);
+    //outPutTask(&task);
     printf("\n\n");
-    printf("Task count: %i\n", runTask(&test, 1, &task));
+    printf("Task count: %i\n", runTask(&characters[0], 3, &task));
 }
 
 void main(int argc, char *argv[]){

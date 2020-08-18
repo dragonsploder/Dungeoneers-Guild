@@ -5,8 +5,8 @@
 
 #define NUMBER_OF_TYPES 2
 int typeConvert[NUMBER_OF_TYPES][10] = {
-    {1, 2, 3, 4, 5, 6,-1,-1,-1,-1},
-    {6, 7, 8, 9,-1,-1,-1,-1,-1,-1},
+    {1, 2, 3, 4, 5,-1,-1,-1,-1,-1},
+    {7, 8, 9,-1,-1,-1,-1,-1,-1,-1},
 };
 
 /*
@@ -35,11 +35,10 @@ struct Check {
 #define CHECK_PUZZLE     3
 #define CHECK_SECRET     4
 #define CHECK_MAZE       5
-#define CHECK_MISC       6
 
 
 
-#define NUMBER_OF_CHECKS 22
+#define NUMBER_OF_CHECKS 26
 struct Check checks[NUMBER_OF_CHECKS] = {
     {CHECK_TRAP, "Trip Wire", 0, 45, 0, 0, 0, 0},
     {CHECK_TRAP, "Spike Pit", 0, 50, 0, 0, 0, 0},
@@ -66,7 +65,12 @@ struct Check checks[NUMBER_OF_CHECKS] = {
     {CHECK_SECRET, "Hidden Door", 0, 0, 0, 0, 50, 0},
     {CHECK_SECRET, "Cryptic Key", 0, 0, 0, 0, 60, 0},
     {CHECK_SECRET, "Secret Passage", 0, 0, 0, 0, 70, 0},
-    {CHECK_SECRET, "Invisable Button", 0, 0, 0, 0, 75, 0}
+    {CHECK_SECRET, "Invisable Button", 0, 0, 0, 0, 75, 0},
+
+    {CHECK_MAZE, "Twisting Passages", 0, 0, 50, 0, 0, 0},
+    {CHECK_MAZE, "Long Switchbacks", 0, 0, 55, 0, 0, 0},
+    {CHECK_MAZE, "Endless Dead Ends", 0, 60, 0, 0, 0, 0},
+    {CHECK_MAZE, "Giant Maze", 0, 0, 70, 0, 0, 0}
 };
 
 int getDifficulty(int array[], int size){
@@ -93,7 +97,7 @@ struct Task genTask(int type, int difficulty){
     shuffleArray(tempTaskTypes, 10);
     int taskTypes[3];
     copyArray(tempTaskTypes, taskTypes, 3, true);
-    printf("%i,%i,%i\n", taskTypes[0], taskTypes[1], taskTypes[2]);
+    //printf("%i,%i,%i\n", taskTypes[0], taskTypes[1], taskTypes[2]);
 
 
     int tempTask;
@@ -119,10 +123,10 @@ void outPutTask(struct Task *curTask){
 bool individualCheck(int check, int character){
     if (check != 0){
         if(character - check > 0){
-            printf("Chance:%f\n", ((4.7931*pow(character - check, 3.0/5.0)) + 50));
+            //printf("Chance:%f\n", ((4.7931*pow(character - check, 3.0/5.0)) + 50));
             return ((float)myRand(100) < ((4.7931*pow(character - check, 3.0/5.0)) + 50));
         } else {
-            printf("Chance:%f\n", ((-4.7931*pow(check - character, 3.0/5.0)) + 50));
+            //printf("Chance:%f\n", ((-4.7931*pow(check - character, 3.0/5.0)) + 50));
             return ((float)myRand(100) < ((-4.7931*pow(check - character, 3.0/5.0)) + 50));
         }
     }
@@ -138,19 +142,82 @@ bool passCheck(struct Character* character, int checkId){
             individualCheck(checks[checkId].cha, character->cha));
 }
 
+void checkMessage(bool pass, int check, struct Character* character, char message[50]){
+    if(pass){
+        switch(checks[check].type){
+            case 1:
+                sprintf(message, "%s evades the %s. ", character->name, checks[check].name);
+                break;
+            case 2:
+                sprintf(message, "%s defeats the %s. ", character->name, checks[check].name);
+                break;
+            case 3:
+                sprintf(message, "%s outsmarts the %s. ", character->name, checks[check].name);
+                break;
+            case 4:
+                sprintf(message, "%s finds the %s. ", character->name, checks[check].name);
+                break;
+            case 5:
+                sprintf(message, "%s gets to the end of the %s. ", character->name, checks[check].name);
+                break;
+            default: // We should never get here
+                sprintf(message, "%s spots a glitched dungeon. ", character->name);
+        }
+    }else{
+        switch(checks[check].type){
+            case 1:
+                sprintf(message, "%s is caught by the %s. ", character->name, checks[check].name);
+                break;
+            case 2:
+                sprintf(message, "%s is defeated by the %s. ", character->name, checks[check].name);
+                break;
+            case 3:
+                sprintf(message, "%s can't understand the %s. ", character->name, checks[check].name);
+                break;
+            case 4:
+                sprintf(message, "%s is unable to find the %s. ", character->name, checks[check].name);
+                break;
+            case 5:
+                sprintf(message, "%s gets lost in the %s. ", character->name, checks[check].name);
+                break;
+            default: // We should never get here
+                sprintf(message, "%s spots a glitched dungeon. ", character->name);
+        }
+    }
+}
+
 int runTask(struct Character characters[], int numberOfCharacters, struct Task* task){
     int failedChecks = 0;
     int passedCheck = false;
+    char message[50];
+
+
+    int charOrder[numberOfCharacters];
+    for(int i = 0; i < numberOfCharacters; i++){
+        charOrder[i] = i;
+    }
+
+
     for(int i = 0; i < task->numberOfChecks; i++){
         passedCheck = false;
+        shuffleArray(&charOrder[0], numberOfCharacters);
         for(int j = 0; j < numberOfCharacters; j++){
-            printf("Char Stats:\nstr:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", characters[j].str, characters[j].dex, characters[j].con, characters[j].inl, characters[j].wis, characters[j].cha);
-            printf("Check Stats:\nstr:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", checks[task->checks[i]].str, checks[task->checks[i]].dex, checks[task->checks[i]].con, checks[task->checks[i]].inl, checks[task->checks[i]].wis, checks[task->checks[i]].cha);
-            passedCheck = passCheck(&characters[j], task->checks[i]);
-            printf(passedCheck?"pass\n\n":"fail\n\n");
-            if (passedCheck) break;
+            //printf("Char Stats:\nstr:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", characters[j].str, characters[j].dex, characters[j].con, characters[j].inl, characters[j].wis, characters[j].cha);
+            //printf("Check Stats:\nstr:%i dex:%i con:%i inl:%i wis:%i cha:%i\n", checks[task->checks[i]].str, checks[task->checks[i]].dex, checks[task->checks[i]].con, checks[task->checks[i]].inl, checks[task->checks[i]].wis, checks[task->checks[i]].cha);
+            passedCheck = passCheck(&characters[charOrder[j]], task->checks[i]);
+            //printf(passedCheck?"pass\n\n":"fail\n\n");
+            if (passedCheck) {
+                checkMessage(true, task->checks[i], &characters[charOrder[j]], message);
+                printf("%s\n", message);
+                break;
+            }
         }
-        if (!passedCheck) failedChecks++;
+        if (!passedCheck){
+            failedChecks++;
+            // Technically they all failed so pick one at random
+            checkMessage(false, task->checks[i], &characters[myRand(numberOfCharacters)], message);
+            printf("%s\n", message);
+        }
     }
 
     return failedChecks;

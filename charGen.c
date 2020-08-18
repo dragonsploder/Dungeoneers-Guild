@@ -79,7 +79,7 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# pets #their# #animal# #rand10# times a day, every day.", 3, 0, 0, 0, 0, 5, 0, "None"},
     {"#they# can currently only lift a maximum of #rand10# #object#s.", 3, -15, -2, 0, 0, 0, 0, "None"},
     {"#they# believes that experience is #rand10# times more important than strength.", 2, -15, 0, 0, 0, 5, 0, "None"},
-    {"#they# has the face of an #animal#.", 3, 0, 0, 0, 0, 0, -5, "None"},
+    {"#they# has the face of #aan# #animal#.", 3, 0, 0, 0, 0, 0, -5, "None"},
     {"At the age of #age#, #they# chained #them#self to #their# favorite #building# in protest.", 3, 0, 0, 10, -5, 0, 0, "None"},
     {"#they# has often messed up the setup of the #region# of #city#'s #competitionActivity#.", 2, 0, -5, 0, 0, 0, 0, "None"},
     {"#they# has trouble using #object#s.", 3, -5, -5, 0, -5, 0, 0, "None"},
