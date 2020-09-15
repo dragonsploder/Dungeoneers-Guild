@@ -229,7 +229,7 @@ int runTask(struct Character characters[], int numberOfCharacters, struct Task* 
     char message[50];
 
 
-    int charOrder[numberOfCharacters];
+    int charOrder[10];
     for(int i = 0; i < numberOfCharacters; i++){
         charOrder[i] = i;
     }

@@ -10,6 +10,12 @@
 #include <math.h>
 #include <inttypes.h>
 
+#if defined(_WIN32)
+    #include <pdcurses/curses.h>
+#else
+    #include <ncurses.h>
+#endif
+
 extern bool debug;
 
 // charGen.c
@@ -94,3 +100,10 @@ int isInString(char string[], char check[]);
 int myRand(int i);
 void shuffleArray(int array[], int size);
 void sliceIncertString(char expression[100], char incert[], int location, int replacmentLen);
+void formatBlock(char* oldParagraph, char* newParagraph, int lineLength);
+
+// cursesIO.c
+void initCurses();
+void stopCurses();
+void printBoarder();
+void charMenu(struct Character* characters, int numberOfCharacters);

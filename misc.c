@@ -56,10 +56,58 @@ void shuffleArray(int array[], int size){
     }
 }
 
-void sliceIncertString(char expression[100], char incert[], int location, int replacmentLen){
-    char oldExpression[100];
+void sliceIncertString(char expression[10000], char incert[], int location, int replacmentLen){
+    char oldExpression[10000];
     strcpy(oldExpression, expression);
     expression[location] = '\0';
     strcat(expression, incert);
     strcat(expression, &oldExpression[location + replacmentLen]);
+}
+
+/*
+void formatBlock(char* oldParagraph, char* newParagraph, int lineLength){
+    int paragraphLength = getStringLength(oldParagraph);
+    int temp = 0;
+    int offset = 0;
+    for (int i = 0; i < paragraphLength; i++){
+        if ((i + 1) % lineLength == 0){
+            if (oldParagraph[i] != ' ' && oldParagraph[i + 1] != ' '){
+                temp = i;
+                while (oldParagraph[temp] != ' '){
+                    temp--;
+                }
+                for (int j = temp; j < i; j++){
+                    newParagraph[j + offset] = ' ';
+                }
+                offset += (i - temp);
+            }
+        }
+        newParagraph[i + offset] = oldParagraph[i];
+    }
+    newParagraph[paragraphLength + offset] = '\0';
+}*/
+
+void formatBlock(char* oldParagraph, char* newParagraph, int lineLength){
+    int paragraphLength = getStringLength(oldParagraph);
+    int temp = 0;
+    int offset = 0;
+    for (int i = 0; i < paragraphLength; i++){
+        newParagraph[i] = oldParagraph[i];
+    }
+
+    for (int i = 0; i < paragraphLength + offset; i++){
+        if ((i + 1) % lineLength == 0){
+            if (newParagraph[i] != ' ' && newParagraph[i + 1] != ' '){
+                temp = i;
+                while (newParagraph[temp] != ' '){
+                    temp--;
+                }
+                for (int j = temp; j < i; j++){
+                    sliceIncertString(newParagraph, " ", j, 0);
+                }
+                offset += (i - temp);
+            }
+        }
+    }
+    newParagraph[paragraphLength + offset] = '\0';
 }

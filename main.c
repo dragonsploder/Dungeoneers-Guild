@@ -58,7 +58,27 @@ void main(int argc, char *argv[]){
 
     srand(seed);
     printf("Seed:%i\n\n", seed);
+    initCurses();
+    printBoarder();
 
+    struct Character test = genEmptyCharacter();
+    genFullChar(&test);
+
+    struct Character test2 = genEmptyCharacter();
+    genFullChar(&test2);
+
+    struct Character test3 = genEmptyCharacter();
+    genFullChar(&test3);
+
+    struct Character characters[3] = {test, test2, test3};
+
+
+    charMenu(&characters[0], 3);
+
+    stopCurses();
+
+    /*
     //genCharacter();
     genNewTask();
+    */
 }
