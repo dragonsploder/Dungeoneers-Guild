@@ -5,7 +5,7 @@ bool debug = false;
 void genCharacter(){
     struct Character test = genEmptyCharacter();
 
-    test.gender = rand() % 2;
+    test.gender = myRand(2);
     genRandomName(test.name, false, test.gender);
     genRandomName(test.lastName, true, test.gender);
     genApperance(&test);
@@ -14,7 +14,7 @@ void genCharacter(){
 }
 
 void genFullChar(struct Character* test){
-    test->gender = rand() % 2;
+    test->gender = myRand(2);
     genRandomName(test->name, false, test->gender);
     genRandomName(test->lastName, true, test->gender);
     genApperance(test);
@@ -37,7 +37,7 @@ void genNewTask(){
     struct Character characters[3] = {test, test2, test3};
     
 
-    struct Task task = genTask(0, 6);
+    struct Task task = genTask(1, 6);
     //outPutTask(&task);
     printf("\n\n");
     printf("Task count: %i\n", runTask(&characters[0], 3, &task));

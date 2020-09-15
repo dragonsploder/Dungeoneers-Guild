@@ -1,12 +1,12 @@
 #include "common.h"
 
-#define TASK_DUNGEON 0
-#define TASK_FETCH 1
+#define TASK_DUNGEON     0
+#define TASK_PROTECT       1
 
 #define NUMBER_OF_TYPES 2
 int typeConvert[NUMBER_OF_TYPES][10] = {
     {1, 2, 3, 4, 5,-1,-1,-1,-1,-1},
-    {7, 8, 9,-1,-1,-1,-1,-1,-1,-1},
+    {2, 6, 7, 8,-1,-1,-1,-1,-1,-1},
 };
 
 /*
@@ -22,23 +22,28 @@ struct Check {
     int type;
     char name[30];
 
-    u_int8_t str;
-    u_int8_t dex;
-    u_int8_t con;
-    u_int8_t inl;
-    u_int8_t wis;
-    u_int8_t cha;
+    uint8_t str;
+    uint8_t dex;
+    uint8_t con;
+    uint8_t inl;
+    uint8_t wis;
+    uint8_t cha;
 }*/
 
-#define CHECK_TRAP       1
-#define CHECK_MONS       2
-#define CHECK_PUZZLE     3
-#define CHECK_SECRET     4
-#define CHECK_MAZE       5
+#define CHECK_TRAP       1 //Dex
+#define CHECK_MONS       2 //Str
+#define CHECK_PUZZLE     3 //Inl
+#define CHECK_SECRET     4 //Wis
+#define CHECK_MAZE       5 //Con
+#define CHECK_PERSON     6 //Cha
+
+#define CHECK_TERRAIN    7 //Wis
+#define CHECK_DISTANCE   8 //Con
 
 
 
-#define NUMBER_OF_CHECKS 26
+
+#define NUMBER_OF_CHECKS 38
 struct Check checks[NUMBER_OF_CHECKS] = {
     {CHECK_TRAP, "Trip Wire", 0, 45, 0, 0, 0, 0},
     {CHECK_TRAP, "Spike Pit", 0, 50, 0, 0, 0, 0},
@@ -56,7 +61,6 @@ struct Check checks[NUMBER_OF_CHECKS] = {
     {CHECK_MONS, "Necromancer", 75, 0, 0, 0, 0, 0},
     {CHECK_MONS, "Dragon", 80, 0, 0, 0, 0, 0},
 
-
     {CHECK_PUZZLE, "Combination Lock", 0, 0, 0, 50, 0, 0},
     {CHECK_PUZZLE, "Sokoban Room", 0, 0, 0, 60, 0, 0},
     {CHECK_PUZZLE, "Riddle Sphinx", 0, 0, 0, 70, 0, 0},
@@ -70,7 +74,22 @@ struct Check checks[NUMBER_OF_CHECKS] = {
     {CHECK_MAZE, "Twisting Passages", 0, 0, 50, 0, 0, 0},
     {CHECK_MAZE, "Long Switchbacks", 0, 0, 55, 0, 0, 0},
     {CHECK_MAZE, "Endless Dead Ends", 0, 60, 0, 0, 0, 0},
-    {CHECK_MAZE, "Giant Maze", 0, 0, 70, 0, 0, 0}
+    {CHECK_MAZE, "Giant Maze", 0, 0, 70, 0, 0, 0},
+
+    {CHECK_PERSON, "Boarder Patrol", 0, 0, 0, 0, 0, 50},
+    {CHECK_PERSON, "Agitated Guard", 0, 0, 0, 0, 0, 55},
+    {CHECK_PERSON, "Suspicious Policeman", 0, 0, 0, 0, 0, 60},
+    {CHECK_PERSON, "Curious Investigator", 0, 0, 0, 0, 0, 70},
+
+    {CHECK_TERRAIN, "Bustling City", 0, 0, 0, 0, 50, 0},
+    {CHECK_TERRAIN, "Thick Forest", 0, 0, 0, 0, 60, 0},
+    {CHECK_TERRAIN, "Foggy Swamp", 0, 0, 0, 0, 65, 0},
+    {CHECK_TERRAIN, "Crisscrossing Roads", 0, 0, 0, 0, 70, 0},
+
+    {CHECK_DISTANCE, "Vast Plains", 0, 0, 50, 0, 0, 0},
+    {CHECK_DISTANCE, "Long Ravine", 0, 0, 55, 0, 0, 0},
+    {CHECK_DISTANCE, "Twisting Road", 0, 0, 0, 60, 0, 0},
+    {CHECK_DISTANCE, "Jagged Mountains", 0, 0, 70, 0, 0, 0},
 };
 
 int getDifficulty(int array[], int size){
@@ -160,6 +179,15 @@ void checkMessage(bool pass, int check, struct Character* character, char messag
             case 5:
                 sprintf(message, "%s gets to the end of the %s. ", character->name, checks[check].name);
                 break;
+            case 6:
+                sprintf(message, "%s distracts the %s. ", character->name, checks[check].name);
+                break;
+            case 7:
+                sprintf(message, "%s navigates the %s. ", character->name, checks[check].name);
+                break;
+            case 8:
+                sprintf(message, "%s perseveres through the %s. ", character->name, checks[check].name);
+                break;
             default: // We should never get here
                 sprintf(message, "%s spots a glitched dungeon. ", character->name);
         }
@@ -178,7 +206,16 @@ void checkMessage(bool pass, int check, struct Character* character, char messag
                 sprintf(message, "%s is unable to find the %s. ", character->name, checks[check].name);
                 break;
             case 5:
+                sprintf(message, "%s can't find a way out of the %s. ", character->name, checks[check].name);
+                break;
+            case 6:
+                sprintf(message, "%s annoys the %s. ", character->name, checks[check].name);
+                break;
+            case 7:
                 sprintf(message, "%s gets lost in the %s. ", character->name, checks[check].name);
+                break;
+            case 8:
+                sprintf(message, "%s gets tiered and gives up in the %s. ", character->name, checks[check].name);
                 break;
             default: // We should never get here
                 sprintf(message, "%s spots a glitched dungeon. ", character->name);

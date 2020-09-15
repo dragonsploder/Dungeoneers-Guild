@@ -8,6 +8,7 @@
 #include <string.h>
 #include <ctype.h> 
 #include <math.h>
+#include <inttypes.h>
 
 extern bool debug;
 
@@ -16,15 +17,15 @@ struct Character {
     char name[10];
     char lastName[10];
     char title[20];
-    u_int8_t age;
+    uint8_t age;
     bool gender;
 
-    u_int8_t str;
-    u_int8_t dex;
-    u_int8_t con;
-    u_int8_t inl;
-    u_int8_t wis;
-    u_int8_t cha;
+    uint8_t str;
+    uint8_t dex;
+    uint8_t con;
+    uint8_t inl;
+    uint8_t wis;
+    uint8_t cha;
 
     char appearance[500];
     char background[2000];
@@ -61,12 +62,12 @@ struct Task {
 struct Check {
     int type;
     char name[30];
-    u_int8_t str;
-    u_int8_t dex;
-    u_int8_t con;
-    u_int8_t inl;
-    u_int8_t wis;
-    u_int8_t cha;
+    uint8_t str;
+    uint8_t dex;
+    uint8_t con;
+    uint8_t inl;
+    uint8_t wis;
+    uint8_t cha;
 };
 
 

@@ -40,7 +40,7 @@ char descriptions[NUMBER_OF_DESCRIPTIONS][100] = {
     "#they# has #length# legs.",
     "#they# has #length# arms.",
     "#they# has #size# ears.",
-    "#they# has a #shapes# sized head.",
+    "#they# has a #shapes# shaped head.",
     "#they# has #size# eyebrows.",
     "#they# has #color#ish skin.",
     "#they# has #shapes# finger and toe nails.",
@@ -254,7 +254,7 @@ void outPutCharacter(struct Character *curChar){
     printf("Strength: %i\n", curChar->str);
     printf("Dexterity: %i\n", curChar->dex);
     printf("Constitution: %i\n", curChar->con);
-    printf("intelligence: %i\n", curChar->inl);
+    printf("Intelligence: %i\n", curChar->inl);
     printf("Wisdom: %i\n", curChar->wis);
     printf("Charisma: %i\n", curChar->cha);
     printf("\n");
@@ -413,18 +413,19 @@ void genApperance(struct Character *curChar){
     char temp[100];
     char expression[100];
     int descriptionNumber;
-    int numberOfDiscriptions = 3 + ((rand() % 4));
+    int numberOfDiscriptions = 3 + ((myRand(4)));
 
+    /*
     if (numberOfDiscriptions > NUMBER_OF_DESCRIPTIONS){
         numberOfDiscriptions = NUMBER_OF_DESCRIPTIONS;
-    }
+    }*/
 
-    int discriptionsOrder[numberOfDiscriptions];
-    for (int i = 0; i < numberOfDiscriptions; i++){
+    int discriptionsOrder[NUMBER_OF_DESCRIPTIONS];
+    for (int i = 0; i < NUMBER_OF_DESCRIPTIONS; i++){
         discriptionsOrder[i] = i;
     }
 
-    shuffleArray(discriptionsOrder, numberOfDiscriptions);
+    shuffleArray(discriptionsOrder, NUMBER_OF_DESCRIPTIONS);
     
     curChar->appearance[0] = '\0';
 
@@ -444,26 +445,26 @@ void genApperance(struct Character *curChar){
 }
 
 void genHistory(struct Character *curChar){
-    int numberOfEvents = 7 + ((rand() % 4) - 2);
+    int numberOfEvents = 7 + ((myRand(4)) - 2);
     curChar->background[0] = '\0';
 
     char temp[100];
     char expression[100];
     int eventNumber;
     int tolerance;
-    int eventsOrder[numberOfEvents];
+    int eventsOrder[NUMBER_OF_EVENTS - NUMBER_OF_BIRTH_EVENTS];
     if (!REPEAT_EVENTS){
-        for (int i = 0; i < (numberOfEvents - NUMBER_OF_BIRTH_EVENTS); i++){
+        for (int i = 0; i < (NUMBER_OF_EVENTS - NUMBER_OF_BIRTH_EVENTS); i++){
             eventsOrder[i] = (i + NUMBER_OF_BIRTH_EVENTS);
         }
-        shuffleArray(eventsOrder, numberOfEvents);
+        shuffleArray(eventsOrder, (NUMBER_OF_EVENTS - NUMBER_OF_BIRTH_EVENTS));
         eventsOrder[0] = myRand(NUMBER_OF_BIRTH_EVENTS);
         curChar->age = BASE_START_AGE + myRand(4) - 2;
     }
 
 
     for (int i = 0; i < numberOfEvents; i++){
-        if (REPEAT_EVENTS){
+        if (!REPEAT_EVENTS){
             eventNumber = eventsOrder[i];
             curChar->age += myRand(6);
         } else {
