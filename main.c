@@ -15,6 +15,7 @@ void genCharacter(){
 
 void genFullChar(struct Character* test){
     test->gender = myRand(2);
+    test->luckyNumber = myRand(255);
     genRandomName(test->name, false, test->gender);
     genRandomName(test->lastName, true, test->gender);
     genApperance(test);

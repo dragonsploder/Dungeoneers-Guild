@@ -2,6 +2,8 @@
 
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 24
+#define MENU_SCREEN_FIRST_PARTITION 21
+#define MENU_SCREEN_SECOND_PARTITION 40
 
 // Uncomment if using VS code cmd terminal
 /*
@@ -88,14 +90,23 @@ void printBoarder(){
     mvprintw(SCREEN_HEIGHT, SCREEN_WIDTH, "+");
 }
 
+void printOverview(struct Character* curChar, int y, int x){
+    mvprintw(y,     x, "Overview:");
+    mvprintw(y + 2, x, "Fullname: %s %s%s", curChar->name, curChar->lastName, (strncmp(curChar->title, " the Untitled", 13) == 0 ? "" : curChar->title));
+    mvprintw(y + 3, x, "Age %i", curChar->age);
+    mvprintw(y + 4, x, "Gender: %s", curChar->gender ? "Female" : "Male");
+    mvprintw(y + 5, x, "Lucky Number: %i", curChar->luckyNumber);
+
+}
+
 void printStats(struct Character* curChar, int y, int x){
     mvprintw(y,     x, "Current stats:");
-    mvprintw(y + 1, x, "  Strength: %i", curChar->str);
-    mvprintw(y + 2, x, "  Dexterity: %i", curChar->dex);
-    mvprintw(y + 3, x, "  Constitution: %i", curChar->con);
-    mvprintw(y + 4, x, "  Intelligence: %i", curChar->inl);
-    mvprintw(y + 5, x, "  Wisdom: %i", curChar->wis);
-    mvprintw(y + 6, x, "  Charisma: %i", curChar->cha);
+    mvprintw(y + 2, x, "Strength: %i", curChar->str);
+    mvprintw(y + 3, x, "Dexterity: %i", curChar->dex);
+    mvprintw(y + 4, x, "Constitution: %i", curChar->con);
+    mvprintw(y + 5, x, "Intelligence: %i", curChar->inl);
+    mvprintw(y + 6, x, "Wisdom: %i", curChar->wis);
+    mvprintw(y + 7, x, "Charisma: %i", curChar->cha);
 }
 
 void printFormatedBlockOfText(char* paragraph, int y, int x, int lineLength){
@@ -112,20 +123,21 @@ void printFormatedBlockOfText(char* paragraph, int y, int x, int lineLength){
 
 void printAppearance(struct Character* curChar, int y, int x, int lineLength){
     mvprintw(y, x, "Appearance:");
-    printFormatedBlockOfText(curChar->appearance, y + 1, x, lineLength);
+    printFormatedBlockOfText(curChar->appearance, y + 2, x, lineLength);
 }
 
 void printHistory(struct Character* curChar, int y, int x, int lineLength){
     mvprintw(y, x, "History:");
-    printFormatedBlockOfText(curChar->background, y + 1, x, lineLength);
+    printFormatedBlockOfText(curChar->background, y + 2, x, lineLength);
 }
 
 void charMenu(struct Character* characters, int numberOfCharacters){
-    printVerticalLine(21, 1, SCREEN_HEIGHT - 1, "|");
-    printVerticalLine(40, 1, SCREEN_HEIGHT - 1, "|");
+    printVerticalLine(MENU_SCREEN_FIRST_PARTITION, 1, SCREEN_HEIGHT - 1, "|");
+    printVerticalLine(MENU_SCREEN_SECOND_PARTITION, 1, SCREEN_HEIGHT - 1, "|");
 
-    int numberOfViewableCharInfo = 3;
+    int numberOfViewableCharInfo = 4;
     char viewableCharInfo[10][20] = {
+        "Overview",
         "Stats",
         "Appearance",
         "History"
@@ -204,17 +216,19 @@ void charMenu(struct Character* characters, int numberOfCharacters){
                     attron(A_BOLD);
                 }
             }
-            mvprintw(1 + i, 22, "%s", viewableCharInfo[i]);
+            mvprintw(1 + i, MENU_SCREEN_FIRST_PARTITION + 1,  "%s", viewableCharInfo[i]);
             attrset(A_NORMAL);
         }
 
-        printBox(1, 41, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, " ");
+        printBox(1, MENU_SCREEN_SECOND_PARTITION + 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, " ");
         if (currentViewableCharInfoSelected == 0){
-            printStats(&characters[currentCharSelected], 1, 41);
+            printOverview(&characters[currentCharSelected], 1, MENU_SCREEN_SECOND_PARTITION + 1);
         } else if (currentViewableCharInfoSelected == 1){
-            printAppearance(&characters[currentCharSelected], 1, 41, SCREEN_WIDTH - 41);
+            printStats(&characters[currentCharSelected], 1, MENU_SCREEN_SECOND_PARTITION + 1);
         } else if (currentViewableCharInfoSelected == 2){
-            printHistory(&characters[currentCharSelected], 1, 41, SCREEN_WIDTH - 41);
+            printAppearance(&characters[currentCharSelected], 1, MENU_SCREEN_SECOND_PARTITION + 1, SCREEN_WIDTH - (MENU_SCREEN_SECOND_PARTITION + 1));
+        } else if (currentViewableCharInfoSelected == 3){
+            printHistory(&characters[currentCharSelected], 1, MENU_SCREEN_SECOND_PARTITION + 1, SCREEN_WIDTH - (MENU_SCREEN_SECOND_PARTITION + 1));
         }
 
 

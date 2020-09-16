@@ -64,7 +64,7 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# is known for loseing a staring contest with #aan# #animal#.", 3, 0, 0, -5, 0, 0, 0, " the Blinking"},
     {"#they# is known as the most beautiful #gender# in the #region# of #city#.", 3, 0, 0, 0, 0, 0, 15, " the Beautiful"},
     {"#they# is known as the strongest #gender# in the #region# of #city#.", 3, 15, 0, 0, 0, 0, 0, " the Strong"},
-    {"#they# is known as the smartest #gender# in the #region# of #city#.", 3, 0, 0, 0, 15, 0, 0, " the intelligent"},
+    {"#they# is known as the smartest #gender# in the #region# of #city#.", 3, 0, 0, 0, 15, 0, 0, " the Intelligent"},
     {"#they# always wanted a #animal#, but #they# doesn't think #they# could take care of it.", 1, 0, -2, -2, -2, 0, 0, "None"},
     {"#they# has participated in #rand100# #competitionActivity#s, and has won #rand10# of them.", 1, 0, -2, -2, -2, 0, 0, "None"},
     {"#they# owns #rand100# #animal#s.", 1, 5, 0, 5, 0, 0, 0, "None"},
@@ -243,13 +243,14 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
 };
 
 struct Character genEmptyCharacter(){
-    return (struct Character) {"Nameless", "Smith", " the Untitled", 0, 0, 50, 50, 50, 50, 50, 50, "They are bland.", "They have done nothing."};
+    return (struct Character) {"Nameless", "Smith", " the Untitled", 0, 0, 3, 50, 50, 50, 50, 50, 50, "They are bland.", "They have done nothing."};
 }
 
 void outPutCharacter(struct Character *curChar){
     printf("%s %s%s\n", curChar->name, curChar->lastName, (strncmp(curChar->title, " the Untitled", 13) == 0 ? "" : curChar->title));
     printf("Age %i\n", curChar->age);
     printf(curChar->gender ? "Female\n" : "Male\n");
+    printf("Lucky Number: %i\n", curChar->luckyNumber);
     printf("\n");
     printf("Strength: %i\n", curChar->str);
     printf("Dexterity: %i\n", curChar->dex);

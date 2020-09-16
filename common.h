@@ -25,6 +25,8 @@ struct Character {
     char title[20];
     uint8_t age;
     bool gender;
+    uint8_t luckyNumber;
+
 
     uint8_t str;
     uint8_t dex;
