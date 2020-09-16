@@ -74,14 +74,13 @@ void main(int argc, char *argv[]){
 
     struct Character characters[3] = {test, test2, test3};
     */
-    struct Character characters[10];
-    for(int i = 0; i < 10; i++){
+    struct Character characters[20];
+    for(int i = 0; i < 20; i++){
         characters[i] = genEmptyCharacter();
-        printf("%i\n", i);
         genFullChar(&characters[i]);
     }
 
-    charMenu(&characters[0], 10);
+    charMenu(&characters[0], 20);
 
     stopCurses();
 

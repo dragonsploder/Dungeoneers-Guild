@@ -93,7 +93,7 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# created a well known #color# beverage in #their# #region#.", 3, 0, 0, 0, 0, -5, 0, "None"},
     {"At the ripe age of #age#, #they# decided to join a #size# mage guild.", 0, 0, 0, 0, 5, 0, 0, " the Mysterious"},
     {"After #rand10# days of grueling travel, #they# collapsed on the side of the road. If not for a random passerby, they would have died.", 3, 0, 0, -10, 0, 0, 0, "None"},
-    {"One trenchers night #they# were almost killed by an assassin. Lucky the caught the #gender# before the deed was done", 2, 0, 7, 0, 0, 0, 0, "None"},
+    {"One treacherous night #they# was almost killed by an assassin. Lucky #they# caught the #gender# before the deed was done.", 2, 0, 7, 0, 0, 0, 0, "None"},
     {"A bite from a #color# lizard has left #them# with faint scales.", 2, 0, 0, 0, 0, 0, -6, " the Reptilain"},
     {"A nasty flu which lasted #rand100# days left #them# very weak, and #they# has never full recoverd", 1, -11, 0, 0, 0, 0, 0, "None"}
 };

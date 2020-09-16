@@ -3,7 +3,7 @@
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 24
 #define MENU_SCREEN_FIRST_PARTITION 21
-#define MENU_SCREEN_SECOND_PARTITION 40
+#define MENU_SCREEN_SECOND_PARTITION 34
 
 // Uncomment if using VS code cmd terminal
 /*
