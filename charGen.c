@@ -9,7 +9,7 @@
 #their# : his or her
 #them# : him or her
 #gender# : man or woman
-#age# : current arg
+#age# : current age
 #aan# : a or an
 #rand3# : 1 - 3 
 #rand10# : 2 - 10
@@ -48,7 +48,7 @@ char descriptions[NUMBER_OF_DESCRIPTIONS][100] = {
     "#they# has a #emotion# look in #their# eyes."
 };
 
-#define NUMBER_OF_EVENTS 40
+#define NUMBER_OF_EVENTS 45
 #define NUMBER_OF_BIRTH_EVENTS 5
 struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# grew up an orphan.", 2, 10, 0, 5, -10, 0, -5, "None"},
@@ -72,10 +72,10 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# lives in a #size# #building#.", 5, -1, -1, -1, -1, -1, -1, "None"},
     {"#they# has slain over #rand100# #enemy#s.", 3, 5, 0, 5, 0, 0, 0, " the Slayer"},
     {"#they# has read #rand100# books about #object#s.", 2, 0, 0, 0, 10, 0, 0, "None"},
-    {"#they# wanted to be a #profession#, but was too stupid.", 2, 0, 0, 0, -15, 0, 0, "None"},
+    {"#they# once wanted to be a #profession#, but spent to much time at the #building#'s inn to learn anything.", 2, 0, 0, 0, -15, 0, 0, "None"},
     {"#they# likes to go to #city#'s #building#.", 2, 0, 0, 5, 0, 0, 0, "None"},
-    {"#they# wants to burn #city#'s #building#.", 2, 0, 0, 0, 0, -5, 0, "None"},
-    {"When #they# was only #age#, #they# kicked #aan# #enemy#. It ended badly.", 3, 0, 0, 0, 0, -10, 0, " the Stupid"},
+    {"#they# has a grudge against #city# and wants to burn their #building#.", 2, 0, 0, 0, 0, -5, 0, "None"},
+    {"When #they# was only #age#, #they# attacked #aan# #enemy#. It ended badly.", 3, 0, 0, 0, 0, -10, 0, " the Stupid"},
     {"#they# pets #their# #animal# #rand10# times a day, every day.", 3, 0, 0, 0, 0, 5, 0, "None"},
     {"#they# can currently only lift a maximum of #rand10# #object#s.", 3, -15, -2, 0, 0, 0, 0, "None"},
     {"#they# believes that experience is #rand10# times more important than strength.", 2, -15, 0, 0, 0, 5, 0, "None"},
@@ -87,10 +87,15 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#their# #region#'s #profession# took pity on #them# when #they# was #age#.", 2, -5, -3, 0, -5, 0, -4, "None"},
     {"#they# does more sit-downs then sit-ups.", 4, -10, 0, 0, 0, 0, 0, "None"},
     {"#they# goes on a jog every #time#.", 1, 1, 0, 5, 0, 0, 0, "None"},
-    {"#they# finally understood gravity at the age of #age#.", 3, 0, 0, 0, -5, 1, 0, "None"},
+    {"#they# finally understood one of #their# old teachers sayings at the age of #age#.", 3, 0, 0, 0, -5, 1, 0, "None"},
     {"#they# fought in a #length# war for the #size# #region# of #city#.", 2, 0, 0, 10, 0, 0, 0, " the War Torn"},
     {"#they# discovered an ancient #enemy#'s lair full of scrolls.", 1, 0, 0, 0, 0, 5, 0, "None"},
-    {"#they# created a well known #color# beverage in #their# #region#.", 3, 0, 0, 0, 0, -5, 0, "None"}
+    {"#they# created a well known #color# beverage in #their# #region#.", 3, 0, 0, 0, 0, -5, 0, "None"},
+    {"At the ripe age of #age#, #they# decided to join a #size# mage guild.", 0, 0, 0, 0, 5, 0, 0, " the Mysterious"},
+    {"After #rand10# days of grueling travel, #they# collapsed on the side of the road. If not for a random passerby, they would have died.", 3, 0, 0, -10, 0, 0, 0, "None"},
+    {"One trenchers night #they# were almost killed by an assassin. Lucky the caught the #gender# before the deed was done", 2, 0, 7, 0, 0, 0, 0, "None"},
+    {"A bite from a #color# lizard has left #them# with faint scales.", 2, 0, 0, 0, 0, 0, -6, " the Reptilain"},
+    {"A nasty flu which lasted #rand100# days left #them# very weak, and #they# has never full recoverd", 1, -11, 0, 0, 0, 0, 0, "None"}
 };
 
 #define ALL_TOKEN_LISTS_SIZE 15
@@ -449,8 +454,8 @@ void genHistory(struct Character *curChar){
     int numberOfEvents = 7 + ((myRand(4)) - 2);
     curChar->background[0] = '\0';
 
-    char temp[100];
-    char expression[100];
+    char temp[500];
+    char expression[500];
     int eventNumber;
     int tolerance;
     int eventsOrder[NUMBER_OF_EVENTS - NUMBER_OF_BIRTH_EVENTS];
@@ -476,6 +481,9 @@ void genHistory(struct Character *curChar){
                 eventNumber = myRand(NUMBER_OF_EVENTS - NUMBER_OF_BIRTH_EVENTS) + NUMBER_OF_BIRTH_EVENTS;
                 curChar->age += myRand(6);
             }
+        }
+        if (debug){
+            printf("Event:%i", eventNumber);
         }
 
         strcpy(expression, events[eventNumber].sentence);

@@ -56,8 +56,8 @@ void shuffleArray(int array[], int size){
     }
 }
 
-void sliceIncertString(char expression[10000], char incert[], int location, int replacmentLen){
-    char oldExpression[10000];
+void sliceIncertString(char expression[2000], char incert[], int location, int replacmentLen){
+    char oldExpression[2000];
     strcpy(oldExpression, expression);
     expression[location] = '\0';
     strcat(expression, incert);

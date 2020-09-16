@@ -62,6 +62,7 @@ void main(int argc, char *argv[]){
     initCurses();
     printBoarder();
 
+    /*
     struct Character test = genEmptyCharacter();
     genFullChar(&test);
 
@@ -72,9 +73,15 @@ void main(int argc, char *argv[]){
     genFullChar(&test3);
 
     struct Character characters[3] = {test, test2, test3};
+    */
+    struct Character characters[10];
+    for(int i = 0; i < 10; i++){
+        characters[i] = genEmptyCharacter();
+        printf("%i\n", i);
+        genFullChar(&characters[i]);
+    }
 
-
-    charMenu(&characters[0], 3);
+    charMenu(&characters[0], 10);
 
     stopCurses();
 

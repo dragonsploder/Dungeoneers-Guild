@@ -40,7 +40,7 @@ struct Character {
 };
 
 struct CharacterEvent {
-    char sentence[100];
+    char sentence[500];
     int8_t tolerance;
     int8_t str;
     int8_t dex;
@@ -101,7 +101,7 @@ int isInIntArray(int array[], int size, int check);
 int isInString(char string[], char check[]);
 int myRand(int i);
 void shuffleArray(int array[], int size);
-void sliceIncertString(char expression[100], char incert[], int location, int replacmentLen);
+void sliceIncertString(char expression[2000], char incert[], int location, int replacmentLen);
 void formatBlock(char* oldParagraph, char* newParagraph, int lineLength);
 
 // cursesIO.c
