@@ -1,10 +1,10 @@
 #include "common.h"
 
-#define BASE_START_AGE 15
-#define REPEAT_EVENTS false
+#define BASE_START_AGE 15 /* History starts at this age */
+#define REPEAT_EVENTS false /* Can background events repeat */
 
 
-/* tokens
+/* tokens which will be replaced in descriptions and events
 #they# : he or she
 #their# : his or her
 #them# : him or her
@@ -29,6 +29,7 @@
 #emotion# : calm to crazy
 */
 
+/* Randomly picked to make up a characters appearance */
 #define NUMBER_OF_DESCRIPTIONS 13
 char descriptions[NUMBER_OF_DESCRIPTIONS][100] = {
     "#they# has #hairshape# #color# hair.",
@@ -48,6 +49,7 @@ char descriptions[NUMBER_OF_DESCRIPTIONS][100] = {
     "#they# has a #emotion# look in #their# eyes."
 };
 
+/* Randomly picked to make up a characters history */
 #define NUMBER_OF_EVENTS 45
 #define NUMBER_OF_BIRTH_EVENTS 5
 struct CharacterEvent events[NUMBER_OF_EVENTS] = {
@@ -72,7 +74,7 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"#they# lives in a #size# #building#.", 5, -1, -1, -1, -1, -1, -1, "None"},
     {"#they# has slain over #rand100# #enemy#s.", 3, 5, 0, 5, 0, 0, 0, " the Slayer"},
     {"#they# has read #rand100# books about #object#s.", 2, 0, 0, 0, 10, 0, 0, "None"},
-    {"#they# once wanted to be a #profession#, but spent to much time at the #building#'s inn to learn anything.", 2, 0, 0, 0, -15, 0, 0, "None"},
+    {"#they# once wanted to be a #profession#, but spent to much time at the #region#'s tavern to learn anything.", 2, 0, 0, 0, -15, 0, 0, "None"},
     {"#they# likes to go to #city#'s #building#.", 2, 0, 0, 5, 0, 0, 0, "None"},
     {"#they# has a grudge against #city# and wants to burn their #building#.", 2, 0, 0, 0, 0, -5, 0, "None"},
     {"When #they# was only #age#, #they# attacked #aan# #enemy#. It ended badly.", 3, 0, 0, 0, 0, -10, 0, " the Stupid"},
@@ -98,6 +100,7 @@ struct CharacterEvent events[NUMBER_OF_EVENTS] = {
     {"A nasty flu which lasted #rand100# days left #them# very weak, and #they# has never full recoverd", 1, -11, 0, 0, 0, 0, 0, "None"}
 };
 
+/* Used to replace tokens in descriptions and events */
 #define ALL_TOKEN_LISTS_SIZE 15
 struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     {"#object#", 10, {
@@ -247,10 +250,12 @@ struct TokenList allTokenLists[ALL_TOKEN_LISTS_SIZE] = {
     }
 };
 
+/* Default Character def, fills all variables just in case */
 struct Character genEmptyCharacter(){
     return (struct Character) {"Nameless", "Smith", " the Untitled", 0, 0, 3, 50, 50, 50, 50, 50, 50, "They are bland.", "They have done nothing."};
 }
 
+/* Mainly for debug, outputs all Character info */
 void outPutCharacter(struct Character *curChar){
     printf("%s %s%s\n", curChar->name, curChar->lastName, (strncmp(curChar->title, " the Untitled", 13) == 0 ? "" : curChar->title));
     printf("Age %i\n", curChar->age);
@@ -270,7 +275,8 @@ void outPutCharacter(struct Character *curChar){
     printf("\n");
 }
 
-// http://arns.freeservers.com/workshop38.html
+/* Simple name generator, used for first, last, and city names. */
+/* Based off of: http://arns.freeservers.com/workshop38.html    */
 void genRandomName(char name[10], bool isSurname, bool gender){
     char vowels[] = "aaaeeeiiou";
     int vowelsLen = 10;
@@ -300,6 +306,7 @@ void genRandomName(char name[10], bool isSurname, bool gender){
     name[0] = toupper(name[0]);
 }
 
+/* Replaces a token from a description or event string */
 void evalExpression(char expression[], char destination[], struct Character *curChar){
     int location;
     do {
@@ -383,7 +390,7 @@ void evalExpression(char expression[], char destination[], struct Character *cur
         }
     } while (location != -1);
 
-    // Lists
+    /* Lists */
     for (int i = 0; i < ALL_TOKEN_LISTS_SIZE; i++){
         do {
             location = isInString(expression, allTokenLists[i].replacment);
@@ -396,7 +403,7 @@ void evalExpression(char expression[], char destination[], struct Character *cur
         } while (location != -1);
     }
 
-    // must be last
+    /* Must be last */
     do {
         location = isInString(expression, "#aan#");
         if (location != -1){
@@ -415,16 +422,17 @@ void evalExpression(char expression[], char destination[], struct Character *cur
     destination[0] = toupper(destination[0]);
 }
 
+/* Genrate Character appearance from random descriptions */
 void genApperance(struct Character *curChar){      
     char temp[100];
     char expression[100];
     int descriptionNumber;
     int numberOfDiscriptions = 3 + ((myRand(4)));
 
-    /*
+    /* Just in case */
     if (numberOfDiscriptions > NUMBER_OF_DESCRIPTIONS){
         numberOfDiscriptions = NUMBER_OF_DESCRIPTIONS;
-    }*/
+    }
 
     int discriptionsOrder[NUMBER_OF_DESCRIPTIONS];
     for (int i = 0; i < NUMBER_OF_DESCRIPTIONS; i++){
@@ -450,6 +458,8 @@ void genApperance(struct Character *curChar){
     }
 }
 
+/* Genrate character history from random */
+/* This also effects a characters stats  */
 void genHistory(struct Character *curChar){
     int numberOfEvents = 7 + ((myRand(4)) - 2);
     curChar->background[0] = '\0';
@@ -517,6 +527,7 @@ void genHistory(struct Character *curChar){
     }
 }
 
+/* Debug function used to cheack if stats gen is skewed */
 void charStatsCheck(){
     int8_t str = 0;
     int8_t dex = 0;

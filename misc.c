@@ -1,5 +1,6 @@
 #include "common.h"
 
+/* Common self explanitory functions */
 void copyArray(int source[], int destination[], int size, bool skipNegativeOne){
     int destinationI=0;
     for (int i = 0; i < size; i++){
@@ -63,29 +64,6 @@ void sliceIncertString(char expression[2000], char incert[], int location, int r
     strcat(expression, incert);
     strcat(expression, &oldExpression[location + replacmentLen]);
 }
-
-/*
-void formatBlock(char* oldParagraph, char* newParagraph, int lineLength){
-    int paragraphLength = getStringLength(oldParagraph);
-    int temp = 0;
-    int offset = 0;
-    for (int i = 0; i < paragraphLength; i++){
-        if ((i + 1) % lineLength == 0){
-            if (oldParagraph[i] != ' ' && oldParagraph[i + 1] != ' '){
-                temp = i;
-                while (oldParagraph[temp] != ' '){
-                    temp--;
-                }
-                for (int j = temp; j < i; j++){
-                    newParagraph[j + offset] = ' ';
-                }
-                offset += (i - temp);
-            }
-        }
-        newParagraph[i + offset] = oldParagraph[i];
-    }
-    newParagraph[paragraphLength + offset] = '\0';
-}*/
 
 void formatBlock(char* oldParagraph, char* newParagraph, int lineLength){
     int paragraphLength = getStringLength(oldParagraph);

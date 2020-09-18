@@ -1,7 +1,9 @@
 #include "common.h"
 
+/* Screen laylout def */
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 24
+
 #define MENU_SCREEN_FIRST_PARTITION 21
 #define MENU_SCREEN_SECOND_PARTITION 34
 
@@ -19,8 +21,9 @@
 #endif
 */
 
+/* Curses init color */
 void initColor(){
-    // Alow the use of color
+    /* Alow the use of color */
     use_default_colors();
     start_color();
     init_pair(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
@@ -33,50 +36,57 @@ void initColor(){
     init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
 }
 
-// Set up terminal with ncurses library
+/* Set up terminal with curses library */
 void initCurses(){
-    // Init curses
+    /* Init curses */
     initscr(); 
-    // Disable buffering and get one character-at-a-time input
+    /* Disable buffering and get one character-at-a-time input */
     cbreak(); 
-    // Get Special keys
+    /* Get Special keys */
     keypad(stdscr, TRUE);
-    // Suppress echoing of typed keys
+    /* Suppress echoing of typed keys */
     noecho();
-    // Hide cursor
+    /* Hide cursor */
     curs_set(0);
+
     initColor();
 
-    //nodelay(stdscr, true);
+    /* nodelay(stdscr, true); */
 }
 
+/* Stop Curses */
 void stopCurses(){
     // Gracefully stop curses
     endwin();
 }
 
+/* Incase I need to do some input flitering at somepoint */
 wchar_t myGetch(){
     return getch();
 }
 
+/* Print a horizontal line at y starting at start and stoping at stop */
 void printHorizontalLine(int y, int start, int stop, char* toPrint){
     for (int i = start; i <= stop; i++){
         mvprintw(y, i, toPrint);
     }
 }
 
+/* Print a vertical line at x starting at start and stoping at stop */
 void printVerticalLine(int x, int start, int stop, char* toPrint){
     for (int i = start; i <= stop; i++){
         mvprintw(i, x, toPrint);
     }
 }
 
+/* Print a filled in box at (y,x) to (stopY, stopX) */
 void printBox(int y, int x, int stopY, int stopX, char* toPrint){
     for (int i = y; i < stopY; i++){
         printHorizontalLine(i, x, stopX, toPrint);
     }
 }
 
+/* Print nice boarder around screen */
 void printBoarder(){
     printVerticalLine(0, 0, SCREEN_HEIGHT, "|");
     printVerticalLine(SCREEN_WIDTH, 0, SCREEN_HEIGHT, "|");
@@ -90,15 +100,16 @@ void printBoarder(){
     mvprintw(SCREEN_HEIGHT, SCREEN_WIDTH, "+");
 }
 
+/* Print overview of a character */
 void printOverview(struct Character* curChar, int y, int x){
     mvprintw(y,     x, "Overview:");
     mvprintw(y + 2, x, "Fullname: %s %s%s", curChar->name, curChar->lastName, (strncmp(curChar->title, " the Untitled", 13) == 0 ? "" : curChar->title));
     mvprintw(y + 3, x, "Age %i", curChar->age);
     mvprintw(y + 4, x, "Gender: %s", curChar->gender ? "Female" : "Male");
     mvprintw(y + 5, x, "Lucky Number: %i", curChar->luckyNumber);
-
 }
 
+/* Print stats of a character */
 void printStats(struct Character* curChar, int y, int x){
     mvprintw(y,     x, "Current stats:");
     mvprintw(y + 2, x, "Strength: %i", curChar->str);
@@ -109,6 +120,7 @@ void printStats(struct Character* curChar, int y, int x){
     mvprintw(y + 7, x, "Charisma: %i", curChar->cha);
 }
 
+/* Print a formated block of text at (y,x) */
 void printFormatedBlockOfText(char* paragraph, int y, int x, int lineLength){
     char formatedHistory[10000];
     formatBlock(paragraph, formatedHistory, lineLength);
@@ -121,16 +133,19 @@ void printFormatedBlockOfText(char* paragraph, int y, int x, int lineLength){
     }
 }
 
+/* Print appearance of a character */
 void printAppearance(struct Character* curChar, int y, int x, int lineLength){
     mvprintw(y, x, "Appearance:");
     printFormatedBlockOfText(curChar->appearance, y + 2, x, lineLength);
 }
 
+/* Print history of a character */
 void printHistory(struct Character* curChar, int y, int x, int lineLength){
     mvprintw(y, x, "History:");
     printFormatedBlockOfText(curChar->background, y + 2, x, lineLength);
 }
 
+/* A menu for viewing characters */
 void charMenu(struct Character* characters, int numberOfCharacters){
     printVerticalLine(MENU_SCREEN_FIRST_PARTITION, 1, SCREEN_HEIGHT - 1, "|");
     printVerticalLine(MENU_SCREEN_SECOND_PARTITION, 1, SCREEN_HEIGHT - 1, "|");
@@ -235,7 +250,6 @@ void charMenu(struct Character* characters, int numberOfCharacters){
 
 
         input = myGetch();
-        //printf("%i\n", input);
     } while (input != 'q');
 
 }

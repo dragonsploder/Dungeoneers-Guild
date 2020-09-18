@@ -1,24 +1,40 @@
 #pragma once
 
-#include <stdint.h>
+/* printf and rand stuff */
 #include <stdlib.h>
-#include <time.h>
 #include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <ctype.h> 
-#include <math.h>
+
+/* uint8_t and stuff */
+#include <stdint.h> 
 #include <inttypes.h>
 
+/* used to seed rand */
+#include <time.h>
+
+/* true and false */
+#include <stdbool.h>
+
+/* String manipulation */
+#include <string.h>
+
+/* Char manipulation */
+#include <ctype.h> 
+
+/* Usefall math functions like pow */
+#include <math.h> 
+
+/* curses (terminal manipulation) */
 #if defined(_WIN32)
     #include <pdcurses/curses.h>
 #else
     #include <ncurses.h>
 #endif
 
-extern bool debug;
 
-// charGen.c
+extern bool debug; /* Controls lots of informational printfs */
+
+
+/* Holds information for characters */
 struct Character {
     char name[10];
     char lastName[10];
@@ -39,6 +55,8 @@ struct Character {
     char background[2000];
 };
 
+
+/* Holds event data for a Character's background */
 struct CharacterEvent {
     char sentence[500];
     int8_t tolerance;
@@ -51,14 +69,14 @@ struct CharacterEvent {
     char title[50];
 };
 
+/* Holds replacements for Tokens like #buildings# */
 struct TokenList {
     char replacment[30];
     int numberOfTokens;
     char tokens[20][30];
 };
 
-
-// taskGen.c
+/* Holds data for tasks */
 struct Task {
     int type;
     int numberOfChecks;
@@ -67,6 +85,7 @@ struct Task {
     int reward;
 };
 
+/* Holds possible checks which make up Tasks */
 struct Check {
     int type;
     char name[30];
@@ -80,7 +99,7 @@ struct Check {
 
 
 
-// charGen.c
+/* charGen.c */
 void genApperance(struct Character *curChar);
 struct Character genEmptyCharacter();
 void genHistory(struct Character *curChar);
@@ -88,13 +107,13 @@ void genRandomName(char name[10], bool isSurname, bool gender);
 void outPutCharacter(struct Character *curChar);
 void charStatsCheck();
 
-// taskGen.c
+/* taskGen.c */
 struct Task genTask(int type, int difficulty);
 void outPutTask(struct Task *curTask);
 int runTask(struct Character characters[], int numberOfCharacters, struct Task* task);
 
 
-// misc.c
+/* misc.c */
 void copyArray(int source[], int destination[], int size, bool skipNegativeOne);
 int getStringLength(char string[]);
 int isInIntArray(int array[], int size, int check);
@@ -104,7 +123,7 @@ void shuffleArray(int array[], int size);
 void sliceIncertString(char expression[2000], char incert[], int location, int replacmentLen);
 void formatBlock(char* oldParagraph, char* newParagraph, int lineLength);
 
-// cursesIO.c
+/* cursesIO.c */
 void initCurses();
 void stopCurses();
 void printBoarder();
