@@ -1,6 +1,9 @@
 #include "common.h"
 
+
 /* Task Types */
+#define NUMBER_OF_TYPES 2
+
 #define TASK_DUNGEON     0
 #define TASK_PROTECT       1
 
@@ -16,12 +19,26 @@
 #define CHECK_DISTANCE   8 //Con
 
 /* Relating Check Types to Task Types */
-#define NUMBER_OF_TYPES 2
 int typeConvert[NUMBER_OF_TYPES][10] = {
     {CHECK_TRAP, CHECK_MONS,   CHECK_PUZZLE,  CHECK_SECRET,  CHECK_MAZE,-1,-1,-1,-1,-1},
     {CHECK_MONS, CHECK_PERSON, CHECK_TERRAIN, CHECK_DISTANCE,-1,        -1,-1,-1,-1,-1},
 };
 
+
+#define NUMBER_OF_DISCRIPTIONS_PER_TASK_TYPE 5
+char taskDescriptions[NUMBER_OF_DISCRIPTIONS_PER_TASK_TYPE * NUMBER_OF_TYPES][50] = {
+    "Dungeon of Bazzar",
+    "Cave of Trag",
+    "Long Tunnel of Death",
+    "Underground Stronghold",
+    "Mountain Lair",
+
+    "Escorting a Queen",
+    "Accompanying a Traveler",
+    "Protecting a Noble",
+    "Following a Gentleman",
+    "Tracking a Ruffian"
+};
 
 /* List of Checks */
 #define NUMBER_OF_CHECKS 38
@@ -97,25 +114,29 @@ struct Task genTask(int type, int difficulty){
     int tempTaskTypes[10];
     copyArray(typeConvert[type], tempTaskTypes, 10, false);
     shuffleArray(tempTaskTypes, 10);
-    int taskTypes[3];
-    copyArray(tempTaskTypes, taskTypes, 3, true);
+
+    copyArray(tempTaskTypes, task.taskTypes, 3, true);
 
 
     int tempTask;
-    do{
+    do {
         for (int i = 0; i < task.numberOfChecks; i++){
-            do{
+            do {
                 tempTask = myRand(NUMBER_OF_CHECKS);
-            }while ((isInIntArray(taskTypes, 3, checks[tempTask].type) == -1) /*&& (myRand(3) != 0)*/);
+            } while ((isInIntArray(task.taskTypes, 3, checks[tempTask].type) == -1) /*&& (myRand(3) != 0)*/);
             task.checks[i] = tempTask;
         } 
-    }while (getDifficulty(task.checks, task.numberOfChecks) != difficulty);
+    } while (getDifficulty(task.checks, task.numberOfChecks) != difficulty);
+    task.difficulty = difficulty;
+    task.reward = (difficulty * 10) + (task.numberOfChecks * 5) + myRand(25);
+    strcpy(task.description, taskDescriptions[(type * NUMBER_OF_DISCRIPTIONS_PER_TASK_TYPE) + myRand(NUMBER_OF_DISCRIPTIONS_PER_TASK_TYPE)]);
 
     return task;
 }
+
 /* Mainly for debug, outputs Task info */
 void outPutTask(struct Task *curTask){
-    for(int i = 0; i < curTask->numberOfChecks; i++){
+    for (int i = 0; i < curTask->numberOfChecks; i++){
         printf("Task:%s:%i\n", checks[curTask->checks[i]].name, checks[curTask->checks[i]].type);
     }
 }
@@ -124,7 +145,7 @@ void outPutTask(struct Task *curTask){
 /* For a better understanding: https://www.desmos.com/calculator/vsatioqttz */
 bool individualCheck(int check, int character){
     if (check != 0){
-        if(character - check > 0){
+        if (character - check > 0){
             /* printf("Chance:%f\n", ((4.7931*pow(character - check, 3.0/5.0)) + 50)); */
             return ((float)myRand(100) < ((4.7931*pow(character - check, 3.0/5.0)) + 50));
         } else {

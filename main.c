@@ -60,7 +60,6 @@ void main(int argc, char *argv[]){
     srand(seed);
     printf("Seed:%i\n\n", seed);
     initCurses();
-    printBoarder();
 
     /*
     struct Character test = genEmptyCharacter();
@@ -80,7 +79,11 @@ void main(int argc, char *argv[]){
         genFullChar(&characters[i]);
     }
 
-    charMenu(&characters[0], 20);
+
+    //charMenu(&characters[0], 20);
+    struct Task task = genTask(0, 6);
+    taskPrep(task);
+    myGetch();
 
     stopCurses();
 

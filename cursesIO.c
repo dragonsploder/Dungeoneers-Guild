@@ -4,6 +4,7 @@
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 24
 
+
 #define MENU_SCREEN_FIRST_PARTITION 21
 #define MENU_SCREEN_SECOND_PARTITION 34
 
@@ -63,6 +64,11 @@ void stopCurses(){
 /* Incase I need to do some input flitering at somepoint */
 wchar_t myGetch(){
     return getch();
+}
+
+/* Clear the scren */
+void clearScreen(){
+    erase();
 }
 
 /* Print a horizontal line at y starting at start and stoping at stop */
@@ -146,7 +152,10 @@ void printHistory(struct Character* curChar, int y, int x, int lineLength){
 }
 
 /* A menu for viewing characters */
-void charMenu(struct Character* characters, int numberOfCharacters){
+int charMenu(struct Character* characters, int numberOfCharacters){
+    clearScreen();
+    printBoarder();
+
     printVerticalLine(MENU_SCREEN_FIRST_PARTITION, 1, SCREEN_HEIGHT - 1, "|");
     printVerticalLine(MENU_SCREEN_SECOND_PARTITION, 1, SCREEN_HEIGHT - 1, "|");
 
@@ -168,7 +177,9 @@ void charMenu(struct Character* characters, int numberOfCharacters){
     wchar_t input = 0;
 
     do {
-        if (input == KEY_RIGHT){
+        if (input == KEY_ENTER){
+            return currentCharSelected;
+        } else if (input == KEY_RIGHT){
             currentViewableCharInfoSelected = 0;
             if (currentSection == 1){
                 currentSection = 0;
@@ -252,4 +263,44 @@ void charMenu(struct Character* characters, int numberOfCharacters){
         input = myGetch();
     } while (input != 'q');
 
+    return -1;
+}
+
+void printIcon(int icon, int y, int x){
+    for(int i = 0; i < 7; i++){
+        for(int j = 0; j < 20; j++){
+            if(taskIcons[icon - 1][i][j] != ' '){
+                mvaddch(y + i, x + j, taskIcons[icon - 1][i][j]);
+            }
+        }
+    }
+}
+
+int taskPrep(struct Task task){
+    clearScreen();
+    printBoarder();
+
+    printHorizontalLine((int) (SCREEN_HEIGHT / 3), 1, SCREEN_WIDTH -1, "-");
+
+    printVerticalLine((int) (SCREEN_WIDTH / 3), ((int) (SCREEN_HEIGHT / 3)) + 1, SCREEN_HEIGHT - 1, "|");
+    printVerticalLine(SCREEN_WIDTH - ((int) (SCREEN_WIDTH / 3)), ((int) (SCREEN_HEIGHT / 3)) + 1, SCREEN_HEIGHT - 1, "|");
+
+    char temp[20];
+    mvprintw(1, 1, task.description);
+
+    mvprintw(3, 1, "Difficulty: ");
+    sprintf(temp ,"%d", task.difficulty);
+    mvprintw(3, 13, temp);
+
+    mvprintw(4, 1, "Reward: ");
+    sprintf(temp ,"%d", task.reward);
+    mvprintw(4, 9, temp);
+
+    for(int i = 0; i < 3; i++){
+        printIcon(task.taskTypes[i], 1, (int) (SCREEN_WIDTH / 3) + 4);
+    }
+
+
+
+    return -1;
 }

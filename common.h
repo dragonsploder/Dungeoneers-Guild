@@ -33,6 +33,8 @@
 
 extern bool debug; /* Controls lots of informational printfs */
 
+#define NUMBER_OF_CHECK_TYPES 8
+
 
 /* Holds information for characters */
 struct Character {
@@ -79,8 +81,10 @@ struct TokenList {
 /* Holds data for tasks */
 struct Task {
     int type;
+    int taskTypes[3];
     int numberOfChecks;
     int checks[50];
+    char description[50];
     int difficulty;
     int reward;
 };
@@ -126,5 +130,9 @@ void formatBlock(char* oldParagraph, char* newParagraph, int lineLength);
 /* cursesIO.c */
 void initCurses();
 void stopCurses();
-void printBoarder();
-void charMenu(struct Character* characters, int numberOfCharacters);
+wchar_t myGetch();
+int charMenu(struct Character* characters, int numberOfCharacters);
+int taskPrep(struct Task task);
+
+/* data.c */
+extern char taskIcons[NUMBER_OF_CHECK_TYPES][7][22];
