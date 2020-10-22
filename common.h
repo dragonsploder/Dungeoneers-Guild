@@ -132,7 +132,7 @@ void initCurses();
 void stopCurses();
 wchar_t myGetch();
 int charMenu(struct Character* characters, int numberOfCharacters);
-int taskPrep(struct Task task);
+void taskPrep(struct Task task, struct Character* possibleCharacters, int numberOfCharacters, struct Character* selectedCharacters);
 
 /* data.c */
 extern char taskIcons[NUMBER_OF_CHECK_TYPES][7][22];

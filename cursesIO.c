@@ -1,7 +1,7 @@
 #include "common.h"
 
 /* Screen laylout def */
-#define SCREEN_WIDTH 80
+#define SCREEN_WIDTH 100
 #define SCREEN_HEIGHT 24
 
 
@@ -21,6 +21,9 @@
     #define KEY_RIGHT     454
 #endif
 */
+
+#undef KEY_ENTER
+#define KEY_ENTER 10
 
 /* Curses init color */
 void initColor(){
@@ -109,8 +112,12 @@ void printBoarder(){
 /* Print overview of a character */
 void printOverview(struct Character* curChar, int y, int x){
     mvprintw(y,     x, "Overview:");
-    mvprintw(y + 2, x, "Fullname: %s %s%s", curChar->name, curChar->lastName, (strncmp(curChar->title, " the Untitled", 13) == 0 ? "" : curChar->title));
-    mvprintw(y + 3, x, "Age %i", curChar->age);
+    mvprintw(y + 2, x, "Fullname: %s %s", curChar->name, curChar->lastName);
+    if(strncmp(curChar->title, " the Untitled", 13) != 0){
+        mvprintw(y + 3, x, "  %s", curChar->title);
+        y++;
+    }
+    mvprintw(y + 3, x, "Age: %i", curChar->age);
     mvprintw(y + 4, x, "Gender: %s", curChar->gender ? "Female" : "Male");
     mvprintw(y + 5, x, "Lucky Number: %i", curChar->luckyNumber);
 }
@@ -276,7 +283,35 @@ void printIcon(int icon, int y, int x){
     }
 }
 
-int taskPrep(struct Task task){
+void taskPrep(struct Task task, struct Character* possibleCharacters, int numberOfCharacters, struct Character* selectedCharacters){
+    wchar_t input = 0;
+
+    int currentCharSelected = 0;
+
+    int locations[3] = {13, (SCREEN_WIDTH / 3) + 13, (SCREEN_WIDTH - ((int) (SCREEN_WIDTH / 3))) + 13};
+
+    do {
+        if (input == KEY_ENTER){
+            int temp = charMenu(possibleCharacters, numberOfCharacters);
+            if(temp == -1){
+                selectedCharacters[currentCharSelected] = genEmptyCharacter();
+            } else {
+                selectedCharacters[currentCharSelected] = possibleCharacters[temp];
+            }
+        } else if (input == KEY_RIGHT){
+            if (currentCharSelected == 2){
+                currentCharSelected = 0;
+            } else {
+                currentCharSelected++;
+            }
+        } else if (input == KEY_LEFT){
+            if (currentCharSelected == 0){
+                currentCharSelected = 2;
+            } else {
+                currentCharSelected--;
+            }
+        }
+
     clearScreen();
     printBoarder();
 
@@ -297,10 +332,32 @@ int taskPrep(struct Task task){
     mvprintw(4, 9, temp);
 
     for(int i = 0; i < 3; i++){
-        printIcon(task.taskTypes[i], 1, (int) (SCREEN_WIDTH / 3) + 4);
+        printIcon(task.taskTypes[i], 1, ((int) (SCREEN_WIDTH / 3) + 1) + ((int)((SCREEN_WIDTH / 3) - 20)/2));
     }
+    
+    mvprintw(9,1,"Dungeoneer: None");
+    mvprintw(9,(SCREEN_WIDTH / 3) + 1,"Dungeoneer: None");
+    mvprintw(9,(SCREEN_WIDTH - ((int) (SCREEN_WIDTH / 3))) + 1,"Dungeoneer: None");
+
+        for(int i = 0; i < 3; i++){
+            if(currentCharSelected == i){
+                attron(A_STANDOUT);
+            }
+            if(selectedCharacters[i].age == 0){
+                mvprintw(9, locations[i], "None");
+                attrset(A_NORMAL);
+                printBox(10, locations[i] - 12, SCREEN_HEIGHT - 1, ((SCREEN_WIDTH / 3) - 2) * (i + 1), " ");
+
+            } else {
+                mvprintw(9, locations[i], selectedCharacters[i].name);
+                attrset(A_NORMAL);
+                printOverview(&selectedCharacters[i], 11, locations[i] - 12);
+            }
+
+            attrset(A_NORMAL);
+        }
 
 
-
-    return -1;
+        input = myGetch();
+    } while (input != 'q' && input != 'g');
 }

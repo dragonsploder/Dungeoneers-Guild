@@ -82,10 +82,16 @@ void main(int argc, char *argv[]){
 
     //charMenu(&characters[0], 20);
     struct Task task = genTask(0, 6);
-    taskPrep(task);
-    myGetch();
+    struct Character selectedCharacters[3];
+    taskPrep(task, &characters[0], 20, &selectedCharacters[0]);
+    //myGetch();
 
     stopCurses();
+    int temp = 3;
+    for(int i = 0; i < 3; i++){
+        if (selectedCharacters[i].age == 0) temp--;
+    }
+    runTask(selectedCharacters, temp, &task);
 
     /*
     //genCharacter();
